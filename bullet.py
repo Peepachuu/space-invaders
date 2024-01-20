@@ -1,7 +1,8 @@
-bullet_velocity = 1
-
+VELOCITY = 8
+BULLET_SURFACE = pygame.image.load("assets/green.png").convert_alpha()
 class Bullet:
     def __init__(self, position):
         self.position = position
-        self.velocity = bullet_velocity
 
+    def move(self):
+        self.position[1] += VELOCITY
