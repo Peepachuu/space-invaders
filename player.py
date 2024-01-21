@@ -9,7 +9,7 @@ STARTING_POSITION = [640, 360]
 
 class Player:
     def __init__(self):
-        self.position = STARTING_POSITION
+        self.position = [STARTING_POSITION[0], STARTING_POSITION[1]]
         self.last_fired = -100
 
     def move(self, keys_pressed):
@@ -26,6 +26,6 @@ class Player:
         bullet_position = [self.position[0], self.position[1]]
         return Bullet(bullet_position)
 
-    def out_of_bounds(self, cord_to_place):
+    def out_of_bounds(self):
         if self.position[0] < -100 or self.position[0] > 1380:
-            self.position[0] = cord_to_place
+            self.position[0] = STARTING_POSITION[0]
