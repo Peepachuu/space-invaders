@@ -15,8 +15,10 @@ class Player:
     def move(self, keys_pressed):
         if keys_pressed[pygame.K_a] or keys_pressed[pygame.K_LEFT]:
             self.position[0] -= VELOCITY
+            self.position[0] = max(self.position[0], 0)
         if keys_pressed[pygame.K_d] or keys_pressed[pygame.K_RIGHT]:
             self.position[0] += VELOCITY
+            self.position[0] = min(self.position[0], 1220)
 
     def can_shoot(self, current_time, mouse_pressed, keys_pressed):
         return mouse_pressed[0] or keys_pressed[pygame.K_SPACE] and current_time - self.last_fired > FIRE_RATE

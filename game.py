@@ -40,7 +40,6 @@ while running:
     player.move(keys)
     if player.can_shoot(current_time, mouse_presses, keys):
         bullets.append(player.shoot(current_time))
-        print(len(bullets))
 
     current_bullets = []
     for i in range(len(bullets)):
