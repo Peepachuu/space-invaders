@@ -14,7 +14,6 @@ bullets = []
 player = Player()
 
 FONT_SURFACE = font.render("You win!", False, "Black")
-Bullet.set_surface()
 
 while running:
     for event in pygame.event.get():
@@ -30,7 +29,7 @@ while running:
         if bullets[i].out_of_bounds():
             bullets_to_remove.append(i)
         bullets[i].move()
-        screen.blit(bullets[i].surface, bullets[i].rect)
+        pygame.draw.rect(screen, "red", bullets[i].rect)
     pygame.display.flip()
 
     keys = pygame.key.get_pressed()
