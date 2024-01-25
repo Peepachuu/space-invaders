@@ -8,14 +8,13 @@ pygame.display.set_caption("Space Invaders")
 running = True
 screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
-background_surface = pygame.image.load("assets/tv.png").convert_alpha()
+font = pygame.font.Font("assets/Pixeled.ttf", 50)
 
 bullets = []
 player = Player()
 
-
-BULLET_SURFACE = pygame.image.load("assets/green.png").convert_alpha()
-PLAYER_SURFACE = pygame.image.load("assets/player.png").convert_alpha()
+FONT_SURFACE = font.render("You win!", False, "Black")
+Bullet.set_surface()
 
 while running:
     for event in pygame.event.get():
@@ -23,14 +22,15 @@ while running:
             running = False
 
     screen.fill("grey")
-    screen.blit(PLAYER_SURFACE, player.position)
+
+    screen.blit(player.surface, player.rect)
 
     bullets_to_remove = []
     for i in range(len(bullets)):
         if bullets[i].out_of_bounds():
             bullets_to_remove.append(i)
         bullets[i].move()
-        screen.blit(BULLET_SURFACE, bullets[i].position)
+        screen.blit(bullets[i].surface, bullets[i].rect)
     pygame.display.flip()
 
     keys = pygame.key.get_pressed()
@@ -47,7 +47,6 @@ while running:
             current_bullets.append(bullets[i])
     bullets = current_bullets
 
-    player.out_of_bounds()
     clock.tick(60)
 
 pygame.quit()
