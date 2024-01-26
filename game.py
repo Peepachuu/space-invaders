@@ -1,6 +1,7 @@
 import pygame
 from bullet import Bullet
 from player import Player
+from enemy import Enemy
 
 pygame.init()
 pygame.display.set_caption("Space Invaders")
@@ -11,9 +12,42 @@ clock = pygame.time.Clock()
 font = pygame.font.Font("assets/Pixeled.ttf", 50)
 
 bullets = []
+enemies = []
 player = Player()
 
 FONT_SURFACE = font.render("You win!", False, "Black")
+
+
+def setUpEnemies():
+    green_enemy_count = 10
+    red_enemy_count = 10
+    yellow_enemy_count = 10
+
+    enemy_type = 'green'
+    horizontal_gap = 50
+    vertical_gap = 30
+
+    current_x = 128
+    current_y = 72
+    for i in range(green_enemy_count):
+        enemies.append(Enemy((current_x, current_y), enemy_type))
+        current_x += horizontal_gap
+
+    current_y += vertical_gap
+    current_x = 128
+    enemy_type = 'red'
+    for i in range(red_enemy_count):
+        enemies.append(Enemy((current_x, current_y), enemy_type))
+        current_x += horizontal_gap
+
+    current_y += vertical_gap
+    current_x = 128
+    enemy_type = 'yellow'
+    for i in range(yellow_enemy_count):
+        enemies.append(Enemy((current_x, current_y), enemy_type))
+        current_x += horizontal_gap 
+    
+setUpEnemies()
 
 while running:
     for event in pygame.event.get():
@@ -23,6 +57,9 @@ while running:
     screen.fill("grey")
 
     screen.blit(player.surface, player.rect)
+
+    for enemy in enemies:
+        screen.blit(enemy.surface, enemy.rect)
 
     bullets_to_remove = []
     for i in range(len(bullets)):
