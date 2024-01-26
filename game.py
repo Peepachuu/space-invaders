@@ -19,34 +19,29 @@ FONT_SURFACE = font.render("You win!", False, "Black")
 
 
 def setUpEnemies():
-    green_enemy_count = 10
-    red_enemy_count = 10
+    green_enemy_count = 20
+    red_enemy_count = 30
     yellow_enemy_count = 10
 
-    enemy_type = 'green'
+    y_cord = 72
+
     horizontal_gap = 50
-    vertical_gap = 30
+    vertical_gap = 40
 
-    current_x = 128
-    current_y = 72
-    for i in range(green_enemy_count):
-        enemies.append(Enemy((current_x, current_y), enemy_type))
-        current_x += horizontal_gap
+    def place_enemies(count, enemy_type):
+        x_cord = 128
+        nonlocal y_cord
+        for i in range(1, count + 1):
+            enemies.append(Enemy((x_cord, y_cord), enemy_type))
+            x_cord += horizontal_gap
+            if i % 10 == 0:
+                y_cord += vertical_gap
+                x_cord = 128
 
-    current_y += vertical_gap
-    current_x = 128
-    enemy_type = 'red'
-    for i in range(red_enemy_count):
-        enemies.append(Enemy((current_x, current_y), enemy_type))
-        current_x += horizontal_gap
+    place_enemies(10, 'yellow')
+    place_enemies(20, 'green')
+    place_enemies(30, 'red')
 
-    current_y += vertical_gap
-    current_x = 128
-    enemy_type = 'yellow'
-    for i in range(yellow_enemy_count):
-        enemies.append(Enemy((current_x, current_y), enemy_type))
-        current_x += horizontal_gap 
-    
 setUpEnemies()
 
 while running:
@@ -54,7 +49,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    screen.fill("grey")
+    screen.fill("black")
 
     screen.blit(player.surface, player.rect)
 
