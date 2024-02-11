@@ -10,8 +10,9 @@ STARTING_POSITION = [640, 360]
 class Player:
     def __init__(self):
         self.last_fired = -100
-        self.surface = pygame.image.load("assets/player.png").convert_alpha()
+        self.surface = pygame.image.load("../assets/player.png").convert_alpha()
         self.rect = self.surface.get_rect(center = (640, 360))
+        self.shoot_sound = pygame.mixer.Sound('../assets/laser.wav')
 
     def move(self, keys_pressed):
         if keys_pressed[pygame.K_a] or keys_pressed[pygame.K_LEFT]:
@@ -25,4 +26,5 @@ class Player:
     def shoot(self, current_time):
         self.last_fired = current_time
         bullet_position = (self.rect.centerx, self.rect.top)
+        self.shoot_sound.play()
         return Bullet(bullet_position)

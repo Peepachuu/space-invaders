@@ -9,7 +9,9 @@ pygame.display.set_caption("Space Invaders")
 running = True
 screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
-font = pygame.font.Font("assets/Pixeled.ttf", 50)
+font = pygame.font.Font("../assets/Pixeled.ttf", 50)
+background_music = pygame.mixer.Sound('../assets/music.wav')
+background_music.play(loops = -1)
 
 bullets = []
 enemies = []
@@ -19,10 +21,6 @@ FONT_SURFACE = font.render("You win!", False, "Black")
 
 
 def setUpEnemies():
-    green_enemy_count = 20
-    red_enemy_count = 30
-    yellow_enemy_count = 10
-
     y_cord = 72
 
     horizontal_gap = 50
