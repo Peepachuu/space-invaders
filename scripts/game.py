@@ -11,6 +11,7 @@ screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 font = pygame.font.Font("../assets/Pixeled.ttf", 50)
 background_music = pygame.mixer.Sound('../assets/music.wav')
+background_music.set_volume(0.5)
 background_music.play(loops = -1)
 
 bullets = []
@@ -42,6 +43,13 @@ def setUpEnemies():
 
 setUpEnemies()
 
+
+def check_bullet_collisions(bullet_index):
+    for i in range(len(enemies)):
+        if pygame.Rect.colliderect(bullets[bullet_index].rect, enemies[i].rect):
+            return i
+    return None
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -55,7 +63,14 @@ while running:
         screen.blit(enemy.surface, enemy.rect)
 
     bullets_to_remove = []
+    enemies_to_remove = []
     for i in range(len(bullets)):
+        enemy_index = check_bullet_collisions(i)
+        if enemy_index != None:
+            bullets_to_remove.append(i)
+            enemies_to_remove.append(enemy_index)
+            Enemy.enemy_explosion.play()
+
         if bullets[i].out_of_bounds():
             bullets_to_remove.append(i)
         bullets[i].move()
@@ -75,6 +90,12 @@ while running:
         if i not in bullets_to_remove:
             current_bullets.append(bullets[i])
     bullets = current_bullets
+
+    current_enemies = []
+    for i in range(len(enemies)):
+        if i not in enemies_to_remove:
+            current_enemies.append(enemies[i])
+    enemies = current_enemies
 
     clock.tick(60)
 
