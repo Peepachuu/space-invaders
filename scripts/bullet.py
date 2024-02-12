@@ -1,9 +1,9 @@
 import pygame
 
 pygame.init()
-VELOCITY = 8
-width = 6
-height = 10
+VELOCITY = 10
+width = 4
+height = 12
 
 class Bullet:
 

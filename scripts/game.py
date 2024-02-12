@@ -16,10 +16,10 @@ background_music.play(loops = -1)
 
 bullets = []
 enemies = []
+enemies_moving_right = True
 player = Player()
 
 FONT_SURFACE = font.render("You win!", False, "Black")
-
 
 def setUpEnemies():
     y_cord = 72
@@ -43,12 +43,22 @@ def setUpEnemies():
 
 setUpEnemies()
 
-
 def check_bullet_collisions(bullet_index):
     for i in range(len(enemies)):
         if pygame.Rect.colliderect(bullets[bullet_index].rect, enemies[i].rect):
             return i
     return None
+
+def move_enemies():
+    horizontal_velocity = Enemy.horizontal_velocity * (1 if enemies_moving_right else -1)
+    should_move_right = enemies_moving_right
+    for enemy in enemies:
+        if enemy.rect.right + horizontal_velocity >= screen.get_width():
+            should_move_right = False
+        elif enemy.rect.left + horizontal_velocity <= 0:
+            should_move_right = True
+        enemy.rect.x += horizontal_velocity
+    return should_move_right
 
 while running:
     for event in pygame.event.get():
@@ -74,13 +84,14 @@ while running:
         if bullets[i].out_of_bounds():
             bullets_to_remove.append(i)
         bullets[i].move()
-        pygame.draw.rect(screen, "red", bullets[i].rect)
+        pygame.draw.rect(screen, "white", bullets[i].rect)
     pygame.display.flip()
 
     keys = pygame.key.get_pressed()
     mouse_presses = pygame.mouse.get_pressed()
     current_time = pygame.time.get_ticks()
     
+    enemies_moving_right = move_enemies()
     player.move(keys)
     if player.can_shoot(current_time, mouse_presses, keys):
         bullets.append(player.shoot(current_time))
