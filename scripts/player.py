@@ -21,10 +21,10 @@ class Player:
             self.rect.right = min(self.rect.right + VELOCITY, 1280)
 
     def can_shoot(self, current_time, mouse_pressed, keys_pressed):
-        return mouse_pressed[0] or keys_pressed[pygame.K_SPACE] and current_time - self.last_fired > FIRE_RATE
+        return (mouse_pressed[0] or keys_pressed[pygame.K_SPACE]) and current_time - self.last_fired > FIRE_RATE
 
     def shoot(self, current_time):
         self.last_fired = current_time
         bullet_position = (self.rect.centerx, self.rect.top)
         self.shoot_sound.play()
-        return Bullet(bullet_position)
+        return Bullet(bullet_position, -1, True)

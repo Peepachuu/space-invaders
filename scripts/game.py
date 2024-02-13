@@ -2,6 +2,7 @@ import pygame
 from bullet import Bullet
 from player import Player
 from enemy import Enemy
+from random import randrange
 
 pygame.init()
 pygame.display.set_caption("Space Invaders")
@@ -17,6 +18,7 @@ background_music.play(loops = -1)
 bullets = []
 enemies = []
 enemies_moving_right = True
+enemy_last_shot = -1000
 player = Player()
 
 FONT_SURFACE = font.render("You win!", False, "Black")
@@ -43,11 +45,15 @@ def setUpEnemies():
 
 setUpEnemies()
 
+
 def check_bullet_collisions(bullet_index):
     for i in range(len(enemies)):
-        if pygame.Rect.colliderect(bullets[bullet_index].rect, enemies[i].rect):
+        if bullets[bullet_index].from_player and pygame.Rect.colliderect(bullets[bullet_index].rect, enemies[i].rect):
             return i
     return None
+
+def check_player_collisions(bullet_index):
+    return (not bullets[bullet_index].from_player and pygame.Rect.colliderect(bullets[bullet_index].rect, player.rect))
 
 def move_enemies():
     horizontal_velocity = Enemy.horizontal_velocity * (1 if enemies_moving_right else -1)
@@ -58,6 +64,9 @@ def move_enemies():
         elif enemy.rect.left + horizontal_velocity <= 0:
             should_move_right = True
         enemy.rect.x += horizontal_velocity
+    if enemies_moving_right != should_move_right:
+        for enemy in enemies:
+            enemy.rect.bottom += Enemy.vertical_velocity
     return should_move_right
 
 while running:
@@ -66,6 +75,10 @@ while running:
             running = False
 
     screen.fill("black")
+
+    keys = pygame.key.get_pressed()
+    mouse_presses = pygame.mouse.get_pressed()
+    current_time = pygame.time.get_ticks()
 
     screen.blit(player.surface, player.rect)
 
@@ -76,6 +89,10 @@ while running:
     enemies_to_remove = []
     for i in range(len(bullets)):
         enemy_index = check_bullet_collisions(i)
+        player_collision = check_player_collisions(i)
+
+        if player_collision:
+            running = False
         if enemy_index != None:
             bullets_to_remove.append(i)
             enemies_to_remove.append(enemy_index)
@@ -87,14 +104,16 @@ while running:
         pygame.draw.rect(screen, "white", bullets[i].rect)
     pygame.display.flip()
 
-    keys = pygame.key.get_pressed()
-    mouse_presses = pygame.mouse.get_pressed()
-    current_time = pygame.time.get_ticks()
     
     enemies_moving_right = move_enemies()
     player.move(keys)
     if player.can_shoot(current_time, mouse_presses, keys):
         bullets.append(player.shoot(current_time))
+
+    if current_time - enemy_last_shot > 1000:
+        rand_index = randrange(len(enemies))
+        bullets.append(enemies[rand_index].shoot())
+        enemy_last_shot = current_time
 
     current_bullets = []
     for i in range(len(bullets)):
