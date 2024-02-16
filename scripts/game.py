@@ -8,9 +8,9 @@ pygame.init()
 pygame.display.set_caption("Space Invaders")
 
 running = True
-screen = pygame.display.set_mode((1280, 720))
+screen = pygame.display.set_mode((600, 600))
 clock = pygame.time.Clock()
-font = pygame.font.Font("../assets/Pixeled.ttf", 50)
+font = pygame.font.Font("../assets/Pixeled.ttf", 20)
 background_music = pygame.mixer.Sound('../assets/music.wav')
 background_music.set_volume(0.5)
 background_music.play(loops = -1)
@@ -21,7 +21,6 @@ enemies_moving_right = True
 enemy_last_shot = -1000
 player = Player()
 
-FONT_SURFACE = font.render("You win!", False, "Black")
 
 def setUpEnemies():
     y_cord = 72
@@ -29,22 +28,21 @@ def setUpEnemies():
     horizontal_gap = 50
     vertical_gap = 40
 
-    def place_enemies(count, enemy_type):
+    def place_enemies(count, enemy_type, enemy_points):
         x_cord = 128
         nonlocal y_cord
         for i in range(1, count + 1):
-            enemies.append(Enemy((x_cord, y_cord), enemy_type))
+            enemies.append(Enemy((x_cord, y_cord), enemy_type, enemy_points))
             x_cord += horizontal_gap
             if i % 10 == 0:
                 y_cord += vertical_gap
                 x_cord = 128
 
-    place_enemies(10, 'yellow')
-    place_enemies(20, 'green')
-    place_enemies(30, 'red')
+    place_enemies(10, 'yellow', 300)
+    place_enemies(20, 'green', 200)
+    place_enemies(30, 'red', 100)
 
 setUpEnemies()
-
 
 def check_bullet_collisions(bullet_index):
     for i in range(len(enemies)):
@@ -69,6 +67,11 @@ def move_enemies():
             enemy.rect.bottom += Enemy.vertical_velocity
     return should_move_right
 
+def display_score():
+    score_surface = font.render(f"score: {player.score}", False, "White")
+    score_rect = score_surface.get_rect(center = (485, 15))
+    screen.blit(score_surface, score_rect)
+    
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -81,6 +84,7 @@ while running:
     current_time = pygame.time.get_ticks()
 
     screen.blit(player.surface, player.rect)
+    display_score()
 
     for enemy in enemies:
         screen.blit(enemy.surface, enemy.rect)
@@ -96,6 +100,7 @@ while running:
             bullets_to_remove.append(i)
         if enemy_index != None:
             bullets_to_remove.append(i)
+            player.update_score(enemies[enemy_index].points)
             enemies_to_remove.append(enemy_index)
             Enemy.enemy_explosion.play()
 

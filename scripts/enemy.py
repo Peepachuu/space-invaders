@@ -10,9 +10,11 @@ class Enemy:
     horizontal_velocity = 2
     enemy_explosion = pygame.mixer.Sound('../assets/explosion.wav')
     shoot_sound = pygame.mixer.Sound('../assets/laser.wav')
-    def __init__(self, coords, enemy_type):
+
+    def __init__(self, coords, enemy_type, enemy_points):
         self.surface = pygame.image.load(f"../assets/{enemy_type}.png").convert_alpha()
         self.rect = self.surface.get_rect(center = coords)
+        self.points = enemy_points
 
     def shoot(self):
         bullet_position = (self.rect.centerx, self.rect.bottom)

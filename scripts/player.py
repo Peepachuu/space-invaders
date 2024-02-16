@@ -11,9 +11,10 @@ class Player:
     def __init__(self):
         self.last_fired = -100
         self.surface = pygame.image.load("../assets/player.png").convert_alpha()
-        self.rect = self.surface.get_rect(center = (640, 700))
+        self.rect = self.surface.get_rect(center = (300, 580))
         self.shoot_sound = pygame.mixer.Sound('../assets/laser.wav')
         self.lives = 3
+        self.score = 0
 
     def move(self, keys_pressed):
         if keys_pressed[pygame.K_a] or keys_pressed[pygame.K_LEFT]:
@@ -33,3 +34,6 @@ class Player:
     def got_hit(self):
         self.lives -= 1
         return self.lives > 0
+
+    def update_score(self, points_to_add):
+        self.score += points_to_add
