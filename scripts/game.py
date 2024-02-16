@@ -92,7 +92,8 @@ while running:
         player_collision = check_player_collisions(i)
 
         if player_collision:
-            running = False
+            running = player.got_hit()
+            bullets_to_remove.append(i)
         if enemy_index != None:
             bullets_to_remove.append(i)
             enemies_to_remove.append(enemy_index)
