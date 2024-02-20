@@ -69,9 +69,19 @@ def move_enemies():
 
 def display_score():
     score_surface = font.render(f"score: {player.score}", False, "White")
-    score_rect = score_surface.get_rect(center = (485, 15))
+    score_rect = score_surface.get_rect()
+    score_rect.left = 15
+    score_rect.top = -5
     screen.blit(score_surface, score_rect)
-    
+
+def display_player_lives():
+    y_cord = 15
+    x_cord = 485
+    player_surface = player.get_surface()
+    for i in range(player.get_lives()):
+        screen.blit(player_surface, (x_cord, y_cord))
+        x_cord -= 80
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -85,6 +95,10 @@ while running:
 
     screen.blit(player.surface, player.rect)
     display_score()
+    display_player_lives()
+
+    if not enemies:
+        running = False
 
     for enemy in enemies:
         screen.blit(enemy.surface, enemy.rect)
@@ -98,6 +112,7 @@ while running:
         if player_collision:
             running = player.got_hit()
             bullets_to_remove.append(i)
+
         if enemy_index != None:
             bullets_to_remove.append(i)
             player.update_score(enemies[enemy_index].points)
